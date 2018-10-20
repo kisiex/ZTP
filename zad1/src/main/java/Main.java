@@ -1,6 +1,11 @@
 
 import java.sql.SQLException;
 
+/**
+ * @author Adam Kisielewski
+ * version 1.0
+ */
+
 public class Main {
 
     private final String database;

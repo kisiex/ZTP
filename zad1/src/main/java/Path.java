@@ -1,18 +1,18 @@
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+/**
+ * @author Adam Kisielewski
+ * version 1.0
+ */
 public class Path {
 
     private static final int FIRST_VERTEX = 1;
-    private static final String QUERY = "select x, y, p from gtable2";
+    private static final String QUERY = "select x, y, p from Gtable";
 
     private final int targetVertex;
     private final String database;
 
-    private List<Float> costs;
     private Map<Integer, Edge> edges;
     private List<List<Edge>> paths;
     private List<Edge> visited;
@@ -21,19 +21,15 @@ public class Path {
         this.database = database;
         this.targetVertex = vertex;
         this.edges = new HashMap<>();
-        this.costs = new ArrayList<>();
         this.paths = new ArrayList<>();
         this.visited = new ArrayList<>();
     }
 
     public float calculatePath() throws SQLException {
-        float result = 0.0f;
-
         loadData();
         findPaths();
-        result = findTheBestPath();
 
-        return result;
+        return findTheBestPath();
     }
 
     private void loadData() throws SQLException {
@@ -53,11 +49,9 @@ public class Path {
     private void findPaths() {
         List<Edge> path = new ArrayList<>();
         processVertex(null, FIRST_VERTEX, path);
-        //System.out.println("Found paths: " + paths.size());
     }
 
     private List<Edge> processVertex(Edge edge, int vertex, List<Edge> path) {
-        //System.out.println("Current vertex: " + vertex);
         if (edge != null) {
             path.add(edge);
         }
@@ -67,7 +61,6 @@ public class Path {
 
         List<Edge> neighbours = findNeighbours(vertex);
 
-        //System.out.println("Current vertex has " + neighbours.size() + " neighbours");
         neighbours.forEach(i -> {
             List<Edge> somePath = processVertex(i, i.getY(), createCopy(path));
             if (somePath != null) {
@@ -110,26 +103,23 @@ public class Path {
     }
 
     private float calcPathCost(List<Edge> path) {
-
         float cost = 0.0f;
         float a = 0.0f;
-        float b = 0.0f;
-        for (Edge e : path) {
-            //System.out.println(e.returnBasicInfo());
-            cost += 1 / (float) e.getX();
-//            if(a == 0.0f){
-//               a = e.getP();
-//            }
-        }
-        //System.out.println("Cost:" + cost);
-        //System.out.println("--------------");
 
+        for (Edge e : path) {
+            cost += 1 / e.getP();
+            if (e.getX() == FIRST_VERTEX) {
+                a = e.getP();
+            } else {
+                cost += Math.abs(1 / a - 1 / e.getP());
+            }
+        }
         return cost;
     }
 
     class Edge {
-
         private final int x;
+
         private final int y;
         private final float p;
 
@@ -161,6 +151,10 @@ public class Path {
             return p;
         }
 
+        Edge createCopy() {
+            return new Edge(this);
+        }
+
         @Override
         public boolean equals(Object other) {
             if (this == other) {
@@ -173,14 +167,9 @@ public class Path {
             return y == edge.y && x == edge.x && p == edge.p;
         }
 
-        String returnBasicInfo() {
-            return "[X = " + this.x +
-                    ", Y = " + this.y +
-                    ", P = " + this.p + "]";
-        }
-
-        Edge createCopy() {
-            return new Edge(this);
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y, p);
         }
     }
 }
