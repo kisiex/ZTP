@@ -6,20 +6,28 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author Adam Kisielewski
+ * version 1.0
+ */
+
 @WebServlet(name = "servlet131726")
 public class Prime extends HttpServlet {
 
-    private static final long serialVersionUID = 42L;
+    private static final long SERIAL_VERSION_UID = 42L;
 
     /**
-     * @param request  HttpServletRequest contains parameter 'n', for which the lowest prime number greater than value
-     *                 of 'n' and can be represented as 3k + 7 is thrown
+     * @param request  HttpServletRequest contains parameter 'n', for which
+     *                 the lowest prime number greater than value of 'n'
+     *                 and can be represented as 3k + 7 is thrown
      * @param response HttpServletResponse
      * @throws ServletException when something bad happened with servlet
      * @throws IOException      when could not get output stream
      */
     //3k + 7 >= n && isPrime( 3k + 7 )
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request,
+                          HttpServletResponse response)
+            throws ServletException, IOException {
         int number = Integer.parseInt(request.getParameter("n"));
         int first = calculateFirstNumber(number, false);
 
@@ -32,14 +40,17 @@ public class Prime extends HttpServlet {
     }
 
     /**
-     * @param request  HttpServletRequest contains parameter 'n', for which the greatest prime number lower than value
-     *                 of 'n' and can be represented as 3k + 7 is returned
+     * @param request  HttpServletRequest contains parameter 'n', for which
+     *                 the greatest prime number lower than value of 'n'
+     *                 and can be represented as 3k + 7 is returned
      * @param response HttpServletResponse
      * @throws ServletException when something bad happened with servlet
      * @throws IOException      when could not get output stream
      */
     //3k + 7 < n && isPrime( 3k + 7 )
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request,
+                         HttpServletResponse response)
+            throws ServletException, IOException {
         int number = Integer.parseInt(request.getParameter("n"));
         int first = calculateFirstNumber(number, true);
 
@@ -53,13 +64,14 @@ public class Prime extends HttpServlet {
 
     /**
      * @param start first number
-     * @param inc   determine if program should increase or decrease first number
-     * @return first number that can be represented as '3k + 7', lower (for inc = false) or greater (for inc = true)
-     * than first number
+     * @param inc   determine if program should increase or decrease start
+     * @return first number that can be represented as '3k + 7',
+     * lower (for inc = false) or greater (for inc = true) than 'n'
      */
     private int calculateFirstNumber(int start, boolean inc) {
+        // to make sure number can be represented as '3k + 7'
         int first = (start - 7) / 3;
-        first = 3 * first + 7; // to make sure number can be represented as '3k + 7'
+        first = 3 * first + 7;
 
         if (inc) {
             while (first < start) {
