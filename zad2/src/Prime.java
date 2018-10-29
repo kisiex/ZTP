@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet(name = "servlet131726")
 public class Prime extends HttpServlet {
 
-    private static final long SERIAL_VERSION_UID = 42L;
+    private static final long serialVersionUID = 42L;
 
     /**
      * @param request  HttpServletRequest contains parameter 'n', for which
@@ -28,15 +28,20 @@ public class Prime extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
             throws ServletException, IOException {
-        int number = Integer.parseInt(request.getParameter("n"));
-        int first = calculateFirstNumber(number, false);
-
-        while (isNotPrime(first)) {
-            first -= 3;
-        }
 
         ServletOutputStream out = response.getOutputStream();
-        out.print(first);
+
+        try {
+            int number = Integer.parseInt(request.getParameter("n"));
+            int first = calculateFirstNumber(number, false);
+
+            while (isNotPrime(first)) {
+                first -= 3;
+            }
+            out.print(first);
+        } catch (NumberFormatException ex) {
+            out.println(ex.getMessage());
+        }
     }
 
     /**
@@ -51,15 +56,22 @@ public class Prime extends HttpServlet {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
             throws ServletException, IOException {
-        int number = Integer.parseInt(request.getParameter("n"));
-        int first = calculateFirstNumber(number, true);
-
-        while (isNotPrime(first)) {
-            first += 3;
-        }
 
         ServletOutputStream out = response.getOutputStream();
-        out.print(first);
+
+        try {
+            int number = Integer.parseInt(request.getParameter("n"));
+            int first = calculateFirstNumber(number, true);
+
+            while (isNotPrime(first)) {
+                first += 3;
+            }
+
+            out.print(first);
+
+        } catch (NumberFormatException ex) {
+            out.println(ex.getMessage());
+        }
     }
 
     /**
