@@ -18,8 +18,8 @@ public class Prime extends HttpServlet {
 
     /**
      * @param request  HttpServletRequest contains parameter 'n', for which
-     *                 the lowest prime number greater than value of 'n'
-     *                 and can be represented as 3k + 7 is thrown
+     *                 the greatest prime number lower than value of 'n'
+     *                 and can be represented as 3k + 7 is returned
      * @param response HttpServletResponse
      * @throws ServletException when something bad happened with servlet
      * @throws IOException      when could not get output stream
@@ -46,7 +46,7 @@ public class Prime extends HttpServlet {
 
     /**
      * @param request  HttpServletRequest contains parameter 'n', for which
-     *                 the greatest prime number lower than value of 'n'
+     *                 the lowest prime number greater than value of 'n'
      *                 and can be represented as 3k + 7 is returned
      * @param response HttpServletResponse
      * @throws ServletException when something bad happened with servlet
