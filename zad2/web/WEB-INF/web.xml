@@ -4,12 +4,20 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 
     <servlet>
-        <servlet-name>servlet131726</servlet-name>
+        <servlet-name>servlet110092</servlet-name>
         <servlet-class>Prime</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>hello</servlet-name>
+        <servlet-class>SimpleServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>servlet131726</servlet-name>
+        <servlet-name>servlet110092</servlet-name>
         <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>hello</servlet-name>
+        <url-pattern>/hello/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
