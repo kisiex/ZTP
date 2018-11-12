@@ -113,4 +113,3 @@ public class Prime extends HttpServlet {
         return false;
     }
 }
-
