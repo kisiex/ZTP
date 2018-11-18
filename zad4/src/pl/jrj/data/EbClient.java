@@ -1,19 +1,28 @@
 package pl.jrj.data;
 
 import javax.ejb.EJB;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class EbClient {
+
+    private Straight straight;
+    private List<MassPoint> points = new ArrayList<>();
 
     @EJB
     public IDataMonitor dataMonitor;
 
     public static void main(String args[]) {
+        System.out.println(new EbClient().calculate());
+    }
 
-        List<Double> numbers = Arrays.stream(args).map(Double::parseDouble).collect(Collectors.toList());
+    private double calculate() {
+        straight = new Straight(dataMonitor.next(), dataMonitor.next(), dataMonitor.next());
+        while (dataMonitor.hasNext()) {
+            points.add(new MassPoint(dataMonitor.next(), dataMonitor.next(), dataMonitor.next(), dataMonitor.next()));
+        }
 
+        return points.stream().mapToDouble(point -> straight.calcDistance(point) * point.getMass()).sum();
     }
 
     class Point {
@@ -40,10 +49,19 @@ public class EbClient {
             this.z = z;
         }
 
-        Point(Point copy) {
-            this.x = copy.getX();
-            this.y = copy.getY();
-            this.z = copy.getZ();
+    }
+
+    class MassPoint extends Point {
+
+        private final double mass;
+
+        MassPoint(double x, double y, double z, double mass) {
+            super(x, y, z);
+            this.mass = mass;
+        }
+
+        double getMass() {
+            return mass;
         }
     }
 
@@ -52,19 +70,13 @@ public class EbClient {
         private final double a;
         private final double b;
         private final double c;
-
-        private final Point p1 = new Point(0, 0, 0);
         private final Point p2;
-        private final Point vector;
-        private final Point vectorOut;
 
-        public Straight(double a, double b, double c) {
+        Straight(double a, double b, double c) {
             this.a = a;
             this.b = b;
             this.c = c;
             this.p2 = new Point(2 * b, -3 * a, 9 * a / (2 * c));
-            this.vector = new Point(p2);
-            this.vectorOut = new Point(p2.getY() * p2.getZ(), p2.getZ() * p2.getX(), p2.getX() * p2.getY());
         }
 
 
