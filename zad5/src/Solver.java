@@ -28,8 +28,8 @@ public class Solver extends HttpServlet {
     /**
      * @param req  instance of HttpServletRequest
      * @param resp instance of HttpServletResponse
-     * @throws ServletException
-     * @throws IOException
+     * @throws ServletException when unexpected error occurs with servlet
+     * @throws IOException when input or output stream could not be got
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -38,10 +38,10 @@ public class Solver extends HttpServlet {
     }
 
     /**
-     * @param req
-     * @param resp
-     * @throws ServletException
-     * @throws IOException
+     * @param req  instance of HttpServletRequest
+     * @param resp instance of HttpServletResponse
+     * @throws ServletException when unexpected error occurs with servlet
+     * @throws IOException when input or output stream could not be got
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -50,14 +50,14 @@ public class Solver extends HttpServlet {
     }
 
     /**
-     * @param table
-     * @return
+     * @param table name of table in database
+     * @return solved value
      */
     private double solve(String table) {
         double res = 0d;
         try {
             connect();
-            List<Point> points = generateListFromDatebase(table);
+            List<Point> points = generateListFromDatabase(table);
             res = blockRemote.calcVolume(points);
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,7 +66,7 @@ public class Solver extends HttpServlet {
     }
 
     /**
-     * @throws NamingException
+     * @throws NamingException when there would be no proper data in context
      */
     private void connect() throws NamingException {
         InitialContext context = new InitialContext();
@@ -78,9 +78,9 @@ public class Solver extends HttpServlet {
     /**
      * @param table name of table in database
      * @return List of points from database for given table
-     * @throws SQLException
+     * @throws SQLException throws when error occurred with database connection
      */
-    private List<Point> generateListFromDatebase(String table) throws SQLException {
+    private List<Point> generateListFromDatabase(String table) throws SQLException {
         Connection conn = DriverManager.getConnection(connectionString);
         Statement qr = conn.createStatement();
         ResultSet pointsFromDatabase = qr.executeQuery("select * from " + table);
@@ -93,6 +93,7 @@ public class Solver extends HttpServlet {
             points.add(new Point(pointsFromDatabase));
         }
         conn.close();
+
         return points;
     }
 
